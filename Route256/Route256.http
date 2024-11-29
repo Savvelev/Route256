@@ -1,6 +1,0 @@
-@Route256_HostAddress = http://localhost:5070
-
-GET {{Route256_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
