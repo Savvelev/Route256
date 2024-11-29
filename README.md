@@ -38,8 +38,8 @@ HTTP POST /v1/delivery-price/caclulate
     Take: 0
   }
   Response Json 200 : 
-  [{
-    cargo: {valume: 0.0},
+   cargos: [{
+    valume: 0.0,
     price: 0.0
   
   }, ... ]
