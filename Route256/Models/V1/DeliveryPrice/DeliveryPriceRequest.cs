@@ -1,4 +1,4 @@
-namespace Route256.Models.DeliveryPrice;
+namespace Route256.Models.V1.DeliveryPrice;
 
 public record DeliveryPriceRequest
 {

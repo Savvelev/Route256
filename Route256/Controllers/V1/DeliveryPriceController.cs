@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
-using Route256.Models.DeliveryPrice;
-using Route256.Models.GetHistory;
+using Route256.Models.V1.DeliveryPrice;
+using Route256.Models.V1.GetHistory;
 
-namespace Route256.Controllers;
+namespace Route256.Controllers.V1;
 
 [ApiController]
 [Route("/v1/[controller]")]
