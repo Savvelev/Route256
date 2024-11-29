@@ -15,7 +15,7 @@
 
 
 Контакт рассчета стоимости 
-
+```
 HTTP POST /v1/delivery-price/caclulate
   Request Json : {
     goods: [
@@ -30,9 +30,9 @@ HTTP POST /v1/delivery-price/caclulate
   Response Json : {
      price: 0.0
   }
-
+```
   Контакт получения стоимости рассчета 
-
+```
   HTTP POST /v1/delivery-price/get-history
   Request Json : {
     Take: 0
@@ -43,4 +43,4 @@ HTTP POST /v1/delivery-price/caclulate
     price: 0.0
   
   }, ... ]
-
+```
