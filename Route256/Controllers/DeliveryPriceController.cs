@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Route256.Models.DeliveryPrice;
+using Route256.Models.GetHistory;
 
 namespace Route256.Controllers;
 
@@ -15,6 +16,13 @@ public class DeliveryPriceController : ControllerBase
     {
         return Ok(new DeliveryPriceResponse(0));
     }
-    
-    
+
+
+    [HttpPost]
+    [Route("[action]")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public IActionResult GetHistory(GetHistoryRequest request)
+    {
+        return Ok(new GetHistoryResponse(null));
+    }
 }
