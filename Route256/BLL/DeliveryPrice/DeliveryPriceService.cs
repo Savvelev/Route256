@@ -37,7 +37,8 @@ public class DeliveryPriceService : IDeliveryPriceService
         _storageRepository.SaveCargo(new CargoDb()
         {
             Price = cargo.Price,
-            Volume = volumeCm
+            Volume = volumeCm,
+            DateAt = DateTime.UtcNow,
         });
         
         return deliveryPrice;
@@ -45,8 +46,15 @@ public class DeliveryPriceService : IDeliveryPriceService
 
     public Cargo[] GetHistoryCargos(int countItems)
     {
-        var dbCargos =  _storageRepository.GetCargos(countItems);
+        var dbCargos =  _storageRepository
+            .GetCargos(countItems)
+            .ToList();
         
-        return dbCargos.Select(c=> new Cargo(c.Volume, c.Price)).ToArray();
+        var orderedCargoEnumerable = dbCargos
+            .OrderByDescending(x => x.DateAt);
+        
+        return orderedCargoEnumerable
+            .Select(c=> new Cargo(c.Volume, c.Price))
+            .ToArray();
     }
 }
