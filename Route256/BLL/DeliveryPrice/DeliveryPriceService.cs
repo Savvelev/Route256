@@ -40,7 +40,7 @@ public class DeliveryPriceService : IDeliveryPriceService
             DateAt = DateTime.UtcNow,
         });
         
-        return deliveryPriceByVolume;
+        return maxPriceAfterCompared;
     }
 
     private static decimal CalculatePriceByWeight(GoodsModel[] goodsModels, out int weightGg)
