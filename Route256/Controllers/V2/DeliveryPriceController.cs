@@ -1,13 +1,13 @@
 using Microsoft.AspNetCore.Mvc;
-using Route256.ApiModels.V1.DeliveryPrice;
-using Route256.ApiModels.V1.GetHistory;
+using Route256.ApiModels.V2.DeliveryPrice;
+using Route256.ApiModels.V2.GetHistory;
 using Route256.BLL.DeliveryPrice;
 using Route256.BLL.DeliveryPrice.Models;
 
-namespace Route256.Controllers.V1;
+namespace Route256.Controllers.V2;
 
 [ApiController]
-[Route("/v1/[controller]")]
+[Route("/v2/[controller]")]
 public class DeliveryPriceController : ControllerBase
 {
     private readonly IDeliveryPriceService _deliveryPriceService;
@@ -25,7 +25,9 @@ public class DeliveryPriceController : ControllerBase
         {
             Height = g.Height,
             Lenght = g.Length,
-            Wight = g.Width
+            Wight = g.Width,
+            Weight = g.Weight,
+            
         }).ToArray();
         
         var deliveryPrice = _deliveryPriceService.CalculateDeliveryPrice(goods);
@@ -42,6 +44,6 @@ public class DeliveryPriceController : ControllerBase
         
         var result = _deliveryPriceService.GetHistoryCargos(request.Take);
         
-        return Ok(new GetHistoryResponse(result.Select(r => new CargoHistoryResponse(r.Volume, r.Price)).ToArray()));
+        return Ok(new GetHistoryResponse(result.Select(r => new CargoHistoryResponse(r.Volume, r.Weight, r.Price)).ToArray()));
     }
 }
