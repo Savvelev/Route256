@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using Route256.ApiModels.V1.DeliveryPrice;
-using Route256.ApiModels.V1.GetHistory;
+using Route256.ApiModels.V2.DeliveryPrice;
+using Route256.ApiModels.V2.GetHistory;
 using Route256.BLL.DeliveryPrice;
 using Route256.BLL.DeliveryPrice.Models;
 
@@ -25,7 +25,9 @@ public class DeliveryPriceController : ControllerBase
         {
             Height = g.Height,
             Lenght = g.Length,
-            Wight = g.Width
+            Wight = g.Width,
+            Weight = g.Weight,
+            
         }).ToArray();
         
         var deliveryPrice = _deliveryPriceService.CalculateDeliveryPrice(goods);

@@ -8,6 +8,7 @@ public class DeliveryPriceService : IDeliveryPriceService
 {
 
     private const double DeliveryCoefficient = 3.27;
+    private const double DeliveryCoefficientByWeight = 1.34;
     
     private readonly IStorageRepository _storageRepository;
 
@@ -19,7 +20,7 @@ public class DeliveryPriceService : IDeliveryPriceService
     {
         if (goodsModels == null || goodsModels.Length == 0)
         {
-            return 0;
+            throw new ArgumentException("No goods models were provided");
         }
         
         const int distanceKm = 1;
@@ -30,18 +31,26 @@ public class DeliveryPriceService : IDeliveryPriceService
 
         var volumeCm = volumeМм / 1000;
         
-        var deliveryPrice = (decimal)(volumeCm * DeliveryCoefficient);
+        var deliveryPriceByVolume = (decimal)(volumeCm * DeliveryCoefficient);
+        
+        var weightGg = goodsModels
+            .Sum(x=>x.Weight * x.Weight) / 1000 ?? 0;
+        
+        var deliveryPriceByWeight = (decimal)(weightGg * DeliveryCoefficientByWeight);
+        
+        var maxPriceAfterCompared = decimal.Max(deliveryPriceByVolume, deliveryPriceByWeight);
 
-        var cargo = new Cargo(volumeCm, deliveryPrice);
+        var cargo = new Cargo(volumeCm,  weightGg, maxPriceAfterCompared);
         
         _storageRepository.SaveCargo(new CargoDb()
         {
             Price = cargo.Price,
-            Volume = volumeCm,
+            Volume = cargo.Volume,
+            Weight = cargo.Weight,
             DateAt = DateTime.UtcNow,
         });
         
-        return deliveryPrice;
+        return deliveryPriceByVolume;
     }
 
     public Cargo[] GetHistoryCargos(int countItems)
@@ -54,7 +63,7 @@ public class DeliveryPriceService : IDeliveryPriceService
             .OrderByDescending(x => x.DateAt);
         
         return orderedCargoEnumerable
-            .Select(c=> new Cargo(c.Volume, c.Price))
+            .Select(c=> new Cargo(c.Volume, c.Weight, c.Price))
             .ToArray();
     }
 }
