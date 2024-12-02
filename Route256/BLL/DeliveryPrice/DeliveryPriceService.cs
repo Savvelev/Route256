@@ -16,8 +16,10 @@ public class DeliveryPriceService : IDeliveryPriceService
         throw new NotImplementedException();
     }
 
-    public Cargo[] GetHistoryCargos(int CountItems)
+    public Cargo[] GetHistoryCargos(int countItems)
     {
-        return _storageRepository.GetCargos(CountItems);
+        var dbCargos =  _storageRepository.GetCargos(countItems);
+        
+        return dbCargos.Select(c=> new Cargo(c.Volume, c.Price)).ToArray();
     }
 }

@@ -1,10 +1,11 @@
 using Route256.BLL.DeliveryPrice.Models;
+using Route256.DAL.Entities;
 
 namespace Route256.DAL.Repositories;
 
 public interface IStorageRepository
 {
-    public void SaveCargo(Cargo cargo);
+    public void SaveCargo(CargoDb cargo);
     
-    public Cargo[] GetCargos(int countItems);
+    public CargoDb[] GetCargos(int countItems);
 }
