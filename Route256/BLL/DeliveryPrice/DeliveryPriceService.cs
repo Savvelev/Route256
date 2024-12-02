@@ -8,6 +8,7 @@ public class DeliveryPriceService : IDeliveryPriceService
 {
 
     private const double DeliveryCoefficient = 3.27;
+    private const double DeliveryCoefficientByWeight = 1.34;
     
     private readonly IStorageRepository _storageRepository;
 
@@ -19,30 +20,51 @@ public class DeliveryPriceService : IDeliveryPriceService
     {
         if (goodsModels == null || goodsModels.Length == 0)
         {
-            return 0;
+            throw new ArgumentException("No goods models were provided");
         }
         
-        const int distanceKm = 1;
-
-        var volumeМм = goodsModels
-            .Select(x => x.Height * x.Lenght * x.Wight)
-            .Sum() * distanceKm;
-
-        var volumeCm = volumeМм / 1000;
         
-        var deliveryPrice = (decimal)(volumeCm * DeliveryCoefficient);
+        var deliveryPriceByVolume = CalculatePriceByVolume(goodsModels, out var volumeCm);
 
-        var cargo = new Cargo(volumeCm, deliveryPrice);
+        var deliveryPriceByWeight = CalculatePriceByWeight(goodsModels, out var weightGg);
+
+        var maxPriceAfterCompared = decimal.Max(deliveryPriceByVolume, deliveryPriceByWeight);
+
+        var cargo = new Cargo(volumeCm,  weightGg, maxPriceAfterCompared);
         
         _storageRepository.SaveCargo(new CargoDb()
         {
             Price = cargo.Price,
-            Volume = volumeCm,
+            Volume = cargo.Volume,
+            Weight = cargo.Weight,
             DateAt = DateTime.UtcNow,
         });
         
-        return deliveryPrice;
+        return maxPriceAfterCompared;
     }
+
+    private static decimal CalculatePriceByWeight(GoodsModel[] goodsModels, out int weightGg)
+    {
+        weightGg = goodsModels
+            .Sum(x=>x.Weight * x.Weight) / 1000 ?? 0;
+
+        var deliveryPriceByWeight = (decimal)(weightGg * DeliveryCoefficientByWeight);
+        return deliveryPriceByWeight;
+    }
+
+    private static decimal CalculatePriceByVolume(GoodsModel[] goodsModels, out int volumeCm)
+    {
+        var volumeМм = goodsModels
+            .Select(x => x.Height * x.Lenght * x.Wight)
+            .Sum();
+
+        volumeCm = volumeМм / 1000;
+        
+        var deliveryPriceByVolume = (decimal)(volumeCm * DeliveryCoefficient);
+        return deliveryPriceByVolume;
+    }
+    
+    
 
     public Cargo[] GetHistoryCargos(int countItems)
     {
@@ -54,7 +76,7 @@ public class DeliveryPriceService : IDeliveryPriceService
             .OrderByDescending(x => x.DateAt);
         
         return orderedCargoEnumerable
-            .Select(c=> new Cargo(c.Volume, c.Price))
+            .Select(c=> new Cargo(c.Volume, c.Weight, c.Price))
             .ToArray();
     }
 }
