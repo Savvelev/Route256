@@ -23,21 +23,11 @@ public class DeliveryPriceService : IDeliveryPriceService
             throw new ArgumentException("No goods models were provided");
         }
         
-        const int distanceKm = 1;
+        
+        var deliveryPriceByVolume = CalculatePriceByVolume(goodsModels, out var volumeCm);
 
-        var volumeМм = goodsModels
-            .Select(x => x.Height * x.Lenght * x.Wight)
-            .Sum() * distanceKm;
+        var deliveryPriceByWeight = CalculatePriceByWeight(goodsModels, out var weightGg);
 
-        var volumeCm = volumeМм / 1000;
-        
-        var deliveryPriceByVolume = (decimal)(volumeCm * DeliveryCoefficient);
-        
-        var weightGg = goodsModels
-            .Sum(x=>x.Weight * x.Weight) / 1000 ?? 0;
-        
-        var deliveryPriceByWeight = (decimal)(weightGg * DeliveryCoefficientByWeight);
-        
         var maxPriceAfterCompared = decimal.Max(deliveryPriceByVolume, deliveryPriceByWeight);
 
         var cargo = new Cargo(volumeCm,  weightGg, maxPriceAfterCompared);
@@ -52,6 +42,29 @@ public class DeliveryPriceService : IDeliveryPriceService
         
         return deliveryPriceByVolume;
     }
+
+    private static decimal CalculatePriceByWeight(GoodsModel[] goodsModels, out int weightGg)
+    {
+        weightGg = goodsModels
+            .Sum(x=>x.Weight * x.Weight) / 1000 ?? 0;
+
+        var deliveryPriceByWeight = (decimal)(weightGg * DeliveryCoefficientByWeight);
+        return deliveryPriceByWeight;
+    }
+
+    private static decimal CalculatePriceByVolume(GoodsModel[] goodsModels, out int volumeCm)
+    {
+        var volumeМм = goodsModels
+            .Select(x => x.Height * x.Lenght * x.Wight)
+            .Sum();
+
+        volumeCm = volumeМм / 1000;
+        
+        var deliveryPriceByVolume = (decimal)(volumeCm * DeliveryCoefficient);
+        return deliveryPriceByVolume;
+    }
+    
+    
 
     public Cargo[] GetHistoryCargos(int countItems)
     {
