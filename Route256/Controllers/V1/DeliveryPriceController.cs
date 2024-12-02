@@ -14,6 +14,9 @@ public class DeliveryPriceController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     public IActionResult Calculate(DeliveryPriceRequest request)
     {
+        
+        
+        
         return Ok(new DeliveryPriceResponse(0));
     }
 
