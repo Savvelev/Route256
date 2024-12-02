@@ -1,4 +1,4 @@
-namespace Route256.Models.V1.GetHistory;
+namespace Route256.ApiModels.V2.GetHistory;
 
 public record GetHistoryResponse(CargoHistoryResponse[] CargoHistory);
 

@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
+using Route256.ApiModels.V1.DeliveryPrice;
+using Route256.ApiModels.V1.GetHistory;
 using Route256.BLL.DeliveryPrice;
 using Route256.BLL.DeliveryPrice.Models;
-using Route256.Models.V1.DeliveryPrice;
-using Route256.Models.V1.GetHistory;
 
 namespace Route256.Controllers.V1;
 
