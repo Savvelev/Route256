@@ -4,7 +4,7 @@ namespace Route256.BLL.DeliveryPrice;
 
 public interface IDeliveryPriceService
 {
-    public decimal CalculateDeliveryPrice(GoodsModel [] goodsModels);
+    public decimal CalculateDeliveryPrice(GoodsModel[]? goodsModels);
     
     public Cargo[] GetHistoryCargos(int CountItems);
 }

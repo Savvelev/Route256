@@ -15,8 +15,13 @@ public class DeliveryPriceService : IDeliveryPriceService
     {
         _storageRepository = storageRepository;
     }
-    public decimal CalculateDeliveryPrice(GoodsModel[] goodsModels)
+    public decimal CalculateDeliveryPrice(GoodsModel[]? goodsModels)
     {
+        if (goodsModels == null || goodsModels.Length == 0)
+        {
+            return 0;
+        }
+        
         const int distanceKm = 1;
 
         var volumeМм = goodsModels
