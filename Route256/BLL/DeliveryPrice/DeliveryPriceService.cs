@@ -79,4 +79,9 @@ public class DeliveryPriceService : IDeliveryPriceService
             .Select(c=> new Cargo(c.Volume, c.Weight, c.Price))
             .ToArray();
     }
+
+    public void DeleteHistoryCargos()
+    {
+       _storageRepository.DeleteAllCargos();
+    }
 }

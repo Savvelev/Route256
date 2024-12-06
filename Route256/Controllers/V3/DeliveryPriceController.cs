@@ -46,4 +46,13 @@ public class DeliveryPriceController : ControllerBase
         
         return Ok(new GetHistoryResponse(result.Select(r => new CargoHistoryResponse(r.Volume, r.Weight, r.Price)).ToArray()));
     }
+    
+    [HttpPost]
+    [Route("[action]")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public IActionResult DeleteHistory()
+    {
+        _deliveryPriceService.DeleteHistoryCargos();
+        return Ok();
+    }
 }

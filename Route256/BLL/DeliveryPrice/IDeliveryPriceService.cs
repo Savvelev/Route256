@@ -7,4 +7,6 @@ public interface IDeliveryPriceService
     public decimal CalculateDeliveryPrice(GoodsModel[]? goodsModels);
     
     public Cargo[] GetHistoryCargos(int CountItems);
+    
+    public void DeleteHistoryCargos();
 }
