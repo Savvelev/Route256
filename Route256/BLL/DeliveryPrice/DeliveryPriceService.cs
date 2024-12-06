@@ -63,7 +63,9 @@ public class DeliveryPriceService : IDeliveryPriceService
 
         var maxPriceAfterCompared = decimal.Max(deliveryPriceByVolume, deliveryPriceByWeight);
 
-        var cargo = new Cargo(volumeM3, weightKg, maxPriceAfterCompared, deliveryModels.Distance);
+        var goodsCount = deliveryModels.Goods.Count;
+        
+        var cargo = new Cargo(volumeM3, weightKg, maxPriceAfterCompared, deliveryModels.Distance, goodsCount);
         
         _storageRepository.SaveCargo(new CargoDb()
         {
@@ -76,8 +78,7 @@ public class DeliveryPriceService : IDeliveryPriceService
         
         return maxPriceAfterCompared;
     }
-
-    // Методы для V1
+    
     private static decimal CalculatePriceByWeightV1(GoodsModel[] goodsModels, out int weightGg)
     {
         weightGg = goodsModels
@@ -143,6 +144,27 @@ public class DeliveryPriceService : IDeliveryPriceService
 
     public Report GetReport()
     {
-        throw new NotImplementedException();
+        var allCargos = _storageRepository.GetAllCargos();
+
+        var maxValue = allCargos.Max(x => x.Volume);
+        
+        var maxWeight = allCargos.Max(x => x.Weight);
+        
+        var maxDistanceForHeaviestGood =  (int)allCargos.First(x=> x.Weight == maxWeight).Distance;
+        var maxDistanceForLargestGood = (int)allCargos.First(x=>x.Volume == maxValue).Distance;
+
+        
+        var wavgPrice = allCargos.Sum(x => x.Price * x.CountGoods) / allCargos.Sum(x=>x.CountGoods);
+        
+        var report = new Report
+        {
+            MaxWeight = (int)maxWeight,
+            MaxVolume = (int)maxValue,
+            MaxDistanceForHeaviestGood = maxDistanceForHeaviestGood,
+            MaxDistanceForLargestGood = maxDistanceForLargestGood,
+            WavgPrice = (decimal)wavgPrice!,
+        };
+
+        return report;
     }
 }

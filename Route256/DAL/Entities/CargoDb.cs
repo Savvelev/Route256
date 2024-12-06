@@ -11,4 +11,6 @@ public class CargoDb
     public DateTime DateAt { get; set; }
 
     public int? Distance { get; set; } 
+    
+    public int? CountGoods { get; set; }
 }
