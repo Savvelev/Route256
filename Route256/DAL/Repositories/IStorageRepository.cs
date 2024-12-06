@@ -8,4 +8,5 @@ public interface IStorageRepository
     public void SaveCargo(CargoDb cargo);
     
     public CargoDb[] GetCargos(int countItems);
+    public void DeleteAllCargos();
 }

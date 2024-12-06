@@ -15,4 +15,9 @@ public class StorageRepository : IStorageRepository
     {
         return CargosStorage.Take(countItems).ToArray();
     }
+
+    public void DeleteAllCargos()
+    {
+        CargosStorage.Clear();
+    }
 }
