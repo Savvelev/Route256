@@ -28,7 +28,7 @@ public class DeliveryPriceController : ControllerBase
             Wight = g.Width
         }).ToArray();
         
-        var deliveryPrice = _deliveryPriceService.CalculateDeliveryPrice(goods);
+        var deliveryPrice = _deliveryPriceService.CalculateDeliveryPriceV1(goods);
         
         return Ok(new DeliveryPriceResponse(deliveryPrice));
     }
