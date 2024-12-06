@@ -74,6 +74,7 @@ public class DeliveryPriceService : IDeliveryPriceService
             Weight = cargo.Weight,
             DateAt = DateTime.UtcNow,
             Distance = cargo.Distance,
+            CountGoods = cargo.CountGoods
         });
         
         return maxPriceAfterCompared;
