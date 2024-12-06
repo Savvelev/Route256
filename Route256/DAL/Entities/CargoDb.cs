@@ -8,5 +8,7 @@ public class CargoDb
     
     public decimal Price { get; set; }
     
-    public DateTime DateAt {get; set;}
+    public DateTime DateAt { get; set; }
+
+    public int Distance { get; set; } 
 }

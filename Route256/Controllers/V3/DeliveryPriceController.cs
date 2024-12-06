@@ -26,11 +26,16 @@ public class DeliveryPriceController : ControllerBase
             Height = g.Height,
             Lenght = g.Length,
             Wight = g.Width,
-            Weight = g.Weight,
-            
+            Weight = g.Weight
         }).ToArray();
         
-        var deliveryPrice = _deliveryPriceService.CalculateDeliveryPrice(goods);
+        var deliveryModel = new DeliveryModel()
+        {
+            Goods = goods,
+            Distance = request?.Distance ?? 0
+        };
+        
+        var deliveryPrice = _deliveryPriceService.CalculateDeliveryPriceV2(deliveryModel);
         
         return Ok(new DeliveryPriceResponse(deliveryPrice));
     }

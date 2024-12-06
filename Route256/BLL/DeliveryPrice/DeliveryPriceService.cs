@@ -16,7 +16,7 @@ public class DeliveryPriceService : IDeliveryPriceService
     {
         _storageRepository = storageRepository;
     }
-    public decimal CalculateDeliveryPrice(GoodsModel[]? goodsModels)
+    public decimal CalculateDeliveryPriceV1(GoodsModel[]? goodsModels)
     {
         if (goodsModels == null || goodsModels.Length == 0)
         {
@@ -24,9 +24,9 @@ public class DeliveryPriceService : IDeliveryPriceService
         }
         
         
-        var deliveryPriceByVolume = CalculatePriceByVolume(goodsModels, out var volumeCm);
+        var deliveryPriceByVolume = CalculatePriceByVolumeV1(goodsModels, out var volumeCm);
 
-        var deliveryPriceByWeight = CalculatePriceByWeight(goodsModels, out var weightGg);
+        var deliveryPriceByWeight = CalculatePriceByWeightV1(goodsModels, out var weightGg);
 
         var maxPriceAfterCompared = decimal.Max(deliveryPriceByVolume, deliveryPriceByWeight);
 
@@ -43,7 +43,41 @@ public class DeliveryPriceService : IDeliveryPriceService
         return maxPriceAfterCompared;
     }
 
-    private static decimal CalculatePriceByWeight(GoodsModel[] goodsModels, out int weightGg)
+    public decimal CalculateDeliveryPriceV2(DeliveryModel deliveryModels)
+    {
+        if (deliveryModels.Goods == null || deliveryModels.Goods.Count == 0)
+        {
+            throw new ArgumentException("No goods were provided");
+        }
+
+        if(deliveryModels.Distance < 1)
+        {
+            throw new ArgumentException("Distance is less than 1 meter");
+        }
+        
+        
+        var deliveryPriceByVolume = CalculatePriceByVolumeV2(deliveryModels, out var volumeCm);
+
+        var deliveryPriceByWeight = CalculatePriceByWeightV2(deliveryModels, out var weightGg);
+
+        var maxPriceAfterCompared = decimal.Max(deliveryPriceByVolume, deliveryPriceByWeight);
+
+        var cargo = new Cargo(volumeCm,  weightGg, maxPriceAfterCompared, deliveryModels.Distance);
+        
+        _storageRepository.SaveCargo(new CargoDb()
+        {
+            Price = cargo.Price,
+            Volume = cargo.Volume,
+            Weight = cargo.Weight,
+            DateAt = DateTime.UtcNow,
+            Distance = (int)cargo.Distance!,
+        });
+        
+        return maxPriceAfterCompared;
+        
+    }
+
+    private static decimal CalculatePriceByWeightV1(GoodsModel[] goodsModels, out int weightGg)
     {
         weightGg = goodsModels
             .Sum(x=>x.Weight * x.Weight) / 1000 ?? 0;
@@ -52,7 +86,7 @@ public class DeliveryPriceService : IDeliveryPriceService
         return deliveryPriceByWeight;
     }
 
-    private static decimal CalculatePriceByVolume(GoodsModel[] goodsModels, out int volumeCm)
+    private static decimal CalculatePriceByVolumeV1(GoodsModel[] goodsModels, out int volumeCm)
     {
         var volumeМм = goodsModels
             .Select(x => x.Height * x.Lenght * x.Wight)
@@ -61,6 +95,27 @@ public class DeliveryPriceService : IDeliveryPriceService
         volumeCm = volumeМм / 1000;
         
         var deliveryPriceByVolume = (decimal)(volumeCm * DeliveryCoefficient);
+        return deliveryPriceByVolume;
+    } 
+    
+    private static decimal CalculatePriceByWeightV2(DeliveryModel deliveryModel, out int weightGg)
+    {
+        weightGg = deliveryModel.Goods!
+            .Sum(x=>x.Weight * x.Weight) / 1000 ?? 0;
+
+        var deliveryPriceByWeight = (decimal)(weightGg * DeliveryCoefficientByWeight) * deliveryModel.Distance;
+        return deliveryPriceByWeight;
+    }
+
+    private static decimal CalculatePriceByVolumeV2(DeliveryModel deliveryModel, out int volumeCm)
+    {
+        var volumeМм = deliveryModel.Goods!
+            .Select(x => x.Height * x.Lenght * x.Wight)
+            .Sum();
+
+        volumeCm = volumeМм / 1000;
+        
+        var deliveryPriceByVolume = (decimal)(volumeCm * DeliveryCoefficient) * deliveryModel.Distance;
         return deliveryPriceByVolume;
     }
     
