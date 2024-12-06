@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Route256.ApiModels.V3.DeliveryPrice;
 using Route256.ApiModels.V3.GetHistory;
+using Route256.ApiModels.V3.Reports;
 using Route256.BLL.DeliveryPrice;
 using Route256.BLL.DeliveryPrice.Models;
 
@@ -61,5 +62,17 @@ public class DeliveryPriceController : ControllerBase
     {
         _deliveryPriceService.DeleteHistoryCargos();
         return Ok();
+    }
+    
+    [HttpPost]
+    [Route("[action]")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public IActionResult Reports()
+    {
+       
+        return Ok(new ReportsResponse()
+        {
+            
+        });
     }
 }
