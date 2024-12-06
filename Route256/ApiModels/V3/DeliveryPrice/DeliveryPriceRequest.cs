@@ -3,6 +3,8 @@ namespace Route256.ApiModels.V3.DeliveryPrice;
 public record DeliveryPriceRequest
 {
     public GoodsRequest[]? Goods { get; init; }
+    
+    public int Distance { get; init; }
 }
 
 public record GoodsRequest

@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using Route256.ApiModels.V2.DeliveryPrice;
-using Route256.ApiModels.V2.GetHistory;
+using Route256.ApiModels.V3.DeliveryPrice;
+using Route256.ApiModels.V3.GetHistory;
 using Route256.BLL.DeliveryPrice;
 using Route256.BLL.DeliveryPrice.Models;
 
