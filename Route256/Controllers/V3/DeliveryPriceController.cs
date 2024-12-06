@@ -69,10 +69,14 @@ public class DeliveryPriceController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     public IActionResult Reports()
     {
-       
-        return Ok(new ReportsResponse()
+       var report =  _deliveryPriceService.GetReport();
+        return Ok(new ReportsResponse
         {
-            
+            MaxWeight = report.MaxWeight,
+            MaxVolume = report.MaxVolume,
+            MaxDistanceForHeaviestGood = report.MaxDistanceForHeaviestGood,
+            MaxDistanceForLargestGood = report.MaxDistanceForLargestGood,
+            WavgPrice = report.WavgPrice,
         });
     }
 }

@@ -140,4 +140,9 @@ public class DeliveryPriceService : IDeliveryPriceService
     {
         _storageRepository.DeleteAllCargos();
     }
+
+    public Report GetReport()
+    {
+        throw new NotImplementedException();
+    }
 }
