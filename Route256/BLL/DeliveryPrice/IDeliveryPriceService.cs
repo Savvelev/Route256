@@ -10,4 +10,6 @@ public interface IDeliveryPriceService
     public Cargo[] GetHistoryCargos(int CountItems);
     
     public void DeleteHistoryCargos();
+    
+    public Report GetReport();
 }
